@@ -1,0 +1,34 @@
+.backgroundImg {
+  background: url('https://images3.alphacoders.com/808/80877.jpg') no-repeat center center fixed;
+  height: 100vh;
+  width:100%;
+}
+
+#title {
+  font-family: 'Sigmar One', cursive;
+  color: #dfdfda;
+  font-size: 15vmin;
+}
+
+#trip{
+  font-family: 'Lato', sans-serif;
+}
+
+
+.center-block {
+  width: 100%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+.btn {
+  font-family: 'Sigmar One', cursive;
+  background-color: #dfdfda;
+}
+
+#map {
+  height: 600px;
+  width: 600px;
+}
