@@ -14,21 +14,47 @@
   font-family: 'Lato', sans-serif;
 }
 
-
-.center-block {
-  width: 100%;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+#logo2 {
+    font-family: 'Sigmar One', cursive;
 }
 
+#trip2{
+  font-family: 'Lato', sans-serif;
+}
 
-.btn {
-  font-family: 'Sigmar One', cursive;
+row .input-group{
+  margin-left: 0;
+  margin-right: 0px;
+}
+.input-group {
+  font-family: 'Lato', sans-serif;
   background-color: #dfdfda;
 }
 
+.searchbar {
+    margin-top: 3%;
+}
+
+.btn {
+  font-family: 'Sigmar One', cursive;
+}
+
+.center-block {
+  width: 100vw;
+  display: inline-block;
+  margin: 25vh auto;
+  text-align: center;
+}
+
+.center-block .input-group {
+  margin: auto;
+
+}
+
+
+
 #map {
-  height: 600px;
-  width: 600px;
+  margin: 40px;
+  height: 60vh;
+  border: 3px solid black;
 }
