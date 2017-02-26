@@ -16,24 +16,14 @@
 
 #logo2 {
     font-family: 'Sigmar One', cursive;
+    color: black;
 }
 
 #trip2{
   font-family: 'Lato', sans-serif;
 }
 
-row .input-group{
-  margin-left: 0;
-  margin-right: 0px;
-}
-.input-group {
-  font-family: 'Lato', sans-serif;
-  background-color: #dfdfda;
-}
 
-.searchbar {
-    margin-top: 3%;
-}
 
 .btn {
   font-family: 'Sigmar One', cursive;
@@ -47,14 +37,23 @@ row .input-group{
 }
 
 .center-block .input-group {
+  font-family: 'Lato', sans-serif;
+  background-color: #dfdfda;
   margin: auto;
 
 }
 
-
-
 #map {
   margin: 40px;
-  height: 60vh;
+  height: 70vh;
   border: 3px solid black;
+}
+
+#searchPanel {
+  margin: 100px auto;
+  margin-bottom: 20px;
+}
+
+#page2{
+  height: 100vh;
 }
