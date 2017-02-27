@@ -23,8 +23,6 @@
   font-family: 'Lato', sans-serif;
 }
 
-
-
 .btn {
   font-family: 'Sigmar One', cursive;
 }
@@ -56,4 +54,14 @@
 
 #page2{
   height: 100vh;
+}
+
+#miles, #time {
+  margin-top: 20px;
+  padding: 6px 12px;
+  font-size: 14px;
+  border: 1px solid #828385;
+  border-radius: 3px;
+  font-family: 'Lato', sans-serif;
+  color: #555;
 }
