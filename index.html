@@ -25,8 +25,6 @@
                 <div class="col-sm-4"></div>
                 <div class="col-sm-4">
                     <div class="input-group">
-                        <!-- <input type="text" class="form-control" placeholder="Search for Destinations">
-                        <span class="input-group-btn"> -->
                         <a href="#page2"><button class="btn btn-default" type="button">Start Planning!</button></a>
                         </span>
                     </div>
@@ -35,36 +33,41 @@
         </div>
     </div>
     <a name="page2">
-      <div class="container-fluid" id="page2">
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
+        <div id="page2">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h1 id="logo2">Road<span id="trip2">trip</span></h1>
+                        </div>
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="active"><a href="index.html#page2">Map<span class="sr-only">(current)</span></a></li>
+                                <li ><a href="info.html">Mania</a></li>
+                        </div>
+                    </div>
+                </div>
+            </nav>
             <div class="row">
-                <div class="col-sm-6">
-                    <h1 id="logo2">Road<span id="trip2">trip</span></h1>
+                <div class="col-sm-8">
+                    <div id="map"></div>
+                </div>
+                <div class="col-sm-3" id="sidePanel">
+                    <div class="input-group" id="searchPanel">
+                        <input type="text" class="form-control" placeholder="Starting Point: City, State" id="startDestination">
+                        <input type="text" class="form-control" placeholder="Destination: City, State" id="endDestination">
+                    </div>
+                    <button class="btn btn-default search" type="button"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                    <button class="btn btn-default waypoint" type="button"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button>
+                    <a href="info.html"><button class="btn btn-default moreInfo" type="button"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span></button></a>
+                    <div>
+                        <div id="distance"></div>
+                        <div id="duration"></div>
+                    </div>
                 </div>
             </div>
-    </nav>
-    <div class="row">
-        <div class="col-sm-8">
-            <div id="map"></div>
         </div>
-        <div class="col-sm-3">
-            <div class="input-group" id="searchPanel">
-                <input type="text" class="form-control" placeholder="Starting Point: City, State" id="start">
-                <input type="text" class="form-control" placeholder="Stop Along the Way: City, State" id="wp1">
-                <input type="text" class="form-control" placeholder="Stop Along the Way: City, State" id="wp2">
-                <input type="text" class="form-control" placeholder="Destination: City, State" id="end">
-            </div>
-            <button class="btn btn-default search" type="button">Search</button>
-            <button class="btn btn-default waypoint" type="button">Add Waypoint</button>
-            <div>
-              <div id="distance"></div>
-              <div id="duration"></div>
-            </div>
-        </div>
-    </div>
-    </div>
-  </a>
+    </a>
 </body>
 
 </html>

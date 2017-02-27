@@ -1,63 +1,93 @@
 $(document).ready(function() {
+  var stopPoints = 0
 
+/********************************
+    Make Map on page load
+********************************/
+  let makeMap = () => {
+    // Map options
+    var mapOptions = {
+      zoom: 4,
+      center: new google.maps.LatLng(39.8282, -98.5795),
+      panControl: false,
+      panControlOptions: {
+        position: google.maps.ControlPosition.BOTTOM_LEFT
+      },
+      zoomControl: true,
+      zoomControlOptions: {
+        style: google.maps.ZoomControlStyle.LARGE,
+        position: google.maps.ControlPosition.RIGHT_CENTER
+      },
+      scaleControl: false,
+    };
 
+    let map = new google.maps.Map(document.getElementById('map'), mapOptions);
+  }
+  makeMap()
 
-let makeMap = () => {
-  // Map options
-  var mapOptions = {
-    zoom: 4,
-    center: new google.maps.LatLng(39.8282, -98.5795),
-    panControl: false,
-    panControlOptions: {
-      position: google.maps.ControlPosition.BOTTOM_LEFT
-    },
-    zoomControl: true,
-    zoomControlOptions: {
-      style: google.maps.ZoomControlStyle.LARGE,
-      position: google.maps.ControlPosition.RIGHT_CENTER
-    },
-    scaleControl: false,
-  };
+  /********************************
+    set route after search btn is clicked
+  ********************************/
 
-  let map = new google.maps.Map(document.getElementById('map'), mapOptions);
-}
-makeMap()
-
-// for Autocomplete search bar
-
-let setRoute = () => {
-    let userDestination = $('#start').val()
-    let endDestination = $('#end').val()
-    let waypoint1 = {location: $('#wp1').val()}
-    let waypoint2 = {location: $('#wp2').val()}
-
-
+  let setRoute = () => {
+    let userDestination = $('#startDestination').val()
+    let endDestination = $('#endDestination').val()
+    let waypoints = []
     let directionsService = new google.maps.DirectionsService;
     let directionsDisplay = new google.maps.DirectionsRenderer;
-
+    for (var i = 1; i <= stopPoints; i++) {
+      let stop = $(`#waypoint${i}`);
+      let value = {
+        location: stop.val()
+      }
+      waypoints.push(value)
+    }
     let map = new google.maps.Map(document.getElementById('map'), {
       zoom: 4,
-      center: {lat: 39.8282, lng: -98.5795}
+      center: {
+        lat: 39.8282,
+        lng: -98.5795
+      }
     });
     directionsDisplay.setMap(map);
 
-let calculateAndDisplayRoute = (directionsService, directionsDisplay) => {
+    let calculateAndDisplayRoute = (directionsService, directionsDisplay) => {
       directionsService.route({
         origin: userDestination,
         destination: endDestination,
-        waypoints: [waypoint1, waypoint2],
+        waypoints: waypoints,
         travelMode: 'DRIVING'
-      }, function(response, status){
+      }, function(response, status) {
         if (status === 'OK') {
           directionsDisplay.setDirections(response)
-          let distance1 = [response.routes[0].legs[0].distance.text, response.routes[0].legs[0].duration.text]
-          let distance2 = [response.routes[0].legs[1].distance.text, response.routes[0].legs[1].duration.text]
-          let distance3 = [response.routes[0].legs[2].distance.text, response.routes[0].legs[2].duration.text]
-          let totalDistance = parseInt(distance1[0]) + parseInt(distance2[0]) + parseInt(distance3[0])
-          // let totalDuration = distance1[1] + distance2[1] + distance3[1]
-          $('#duration').html(`<p id="time"><strong> ${distance1[1]} | ${distance2[1]} | ${distance3[1]} </strong></p>`)
-          $('#distance').html(`<p id="miles"><strong>${totalDistance} miles</strong></p>`)
-          console.log(response)
+          let legs = {
+            distance: 0,
+            duration: 0
+          }
+
+          let durations = ''
+          let distances = []
+
+          for (var i = 0; i < response.routes[0].legs.length; i++) {
+            let distance = parseInt(response.routes[0].legs[i].distance.text)
+            let duration = response.routes[0].legs[i].duration.text
+            if (duration.includes('hours')) {
+              durations += (duration + ' ')
+            } else {
+              durations += ('0 hrs ' + duration + ' ')
+            }
+
+            distances.push(distance)
+            legs.distance += distance
+
+          }
+
+          let durationTotal = durationCalculator(durations)
+
+
+          $('#duration').html(`<p id="time">Drive Time: <strong>${durationTotal}</strong></p>`)
+          $('#distance').html(`<p id="miles">Total Miles: <strong>${legs.distance} miles</strong></p>`)
+
         } else {
           window.alert('Directions request failed due to ' + status)
         }
@@ -66,41 +96,59 @@ let calculateAndDisplayRoute = (directionsService, directionsDisplay) => {
 
     calculateAndDisplayRoute(directionsService, directionsDisplay)
 
-}
-
-let durationCalculator = () => {
-  let hourAcc= 0
-  let minAcc = 0
-
-  let durA = '2 hours 2 min'
-  let durB = '3 hours 3 min'
-  let durC = '1 hour 58 min'
-  let distanceBig = durA + ' ' + durB + ' ' + durC
-  distanceBig = distanceBig.split(' ')
-
-  console.log(distanceBig);
-  for (var i = 0; i < distanceBig.length; i+=4) {
-    let hours = +(distanceBig[i])
-    hourAcc += hours
   }
-  for (var i = 2; i < distanceBig.length; i+=4) {
-    let min = +(distanceBig[i])
-    minAcc += min
+
+  /********************************
+    function called in calculateAndDisplayRoute, used to calculate drive length
+  ********************************/
+
+  let durationCalculator = (string) => {
+    let hourAcc = 0
+    let minAcc = 0
+
+    let durationsArr = string.split(' ')
+      for (var i = 0; i < durationsArr.length; i += 4) {
+        let hours = +(durationsArr[i])
+        hourAcc += hours
+      }
+      for (var i = 2; i < durationsArr.length; i += 4) {
+        let min = +(durationsArr[i])
+        minAcc += min
+      }
+    // }
+    if (minAcc > 60) {
+      hourAcc += Math.round(minAcc / 60)
+      minAcc = minAcc % 60
+    }
+    let totalDuration = hourAcc + ' hours ' + minAcc + ' minutes'
+    return totalDuration
   }
-  if (minAcc > 60) {
-    hourAcc += Math.round(minAcc / 60)
-    minAcc = minAcc % 60
+
+  /********************************
+    function to create input bars for waypoint entry
+  ********************************/
+  let createWaypoint = () => {
+    stopPoints += 1
+    $(`<input type="text" class="form-control" id="waypoint${stopPoints}" placeholder="Waypoint: City, State">`).insertBefore('#endDestination')
   }
-  let totalDuration = hourAcc + ' hours ' + minAcc + ' minutes'
-  console.log(totalDuration)
- }
 
-durationCalculator()
+  /********************************
+    ajax calls
+  ********************************/
 
-let createWaypoint = () => {
-  
-}
+  $.ajax({
+    method: 'POST',
+    url: 'https://api.yelp.com/oauth2/token'
+    
+  })
 
-$('.waypoint').click(createWaypoint);
-$('.search').click(setRoute);
+  /********************************
+    button listener events
+  ********************************/
+
+  $('.waypoint').click(createWaypoint);
+  $('.search').click(setRoute);
 })
+
+//Yelp App ID vzr5Q_hYVbvNfHwnKJd1bg
+// yelp app secret YXW2tdSKOogmCDYT2HbHSsjb8edQRf7lsmSozQnWx2XBWQs5Ugq979J56XO1gZ0h
