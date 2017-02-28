@@ -1,9 +1,12 @@
 $(document).ready(function() {
   var stopPoints = 0
+  var userDestination
+  var endDestination
+  var waypoints = []
 
-/********************************
-    Make Map on page load
-********************************/
+  /********************************
+      Make Map on page load
+  ********************************/
   let makeMap = () => {
     // Map options
     var mapOptions = {
@@ -30,9 +33,9 @@ $(document).ready(function() {
   ********************************/
 
   let setRoute = () => {
-    let userDestination = $('#startDestination').val()
-    let endDestination = $('#endDestination').val()
-    let waypoints = []
+    userDestination = $('#startDestination').val()
+    endDestination = $('#endDestination').val()
+
     let directionsService = new google.maps.DirectionsService;
     let directionsDisplay = new google.maps.DirectionsRenderer;
     for (var i = 1; i <= stopPoints; i++) {
@@ -64,7 +67,7 @@ $(document).ready(function() {
             distance: 0,
             duration: 0
           }
-
+          console.log(response);
           let durations = ''
           let distances = []
 
@@ -107,14 +110,14 @@ $(document).ready(function() {
     let minAcc = 0
 
     let durationsArr = string.split(' ')
-      for (var i = 0; i < durationsArr.length; i += 4) {
-        let hours = +(durationsArr[i])
-        hourAcc += hours
-      }
-      for (var i = 2; i < durationsArr.length; i += 4) {
-        let min = +(durationsArr[i])
-        minAcc += min
-      }
+    for (var i = 0; i < durationsArr.length; i += 4) {
+      let hours = +(durationsArr[i])
+      hourAcc += hours
+    }
+    for (var i = 2; i < durationsArr.length; i += 4) {
+      let min = +(durationsArr[i])
+      minAcc += min
+    }
     // }
     if (minAcc > 60) {
       hourAcc += Math.round(minAcc / 60)
@@ -133,14 +136,20 @@ $(document).ready(function() {
   }
 
   /********************************
-    ajax calls
+    ajax calls (https://developers.google.com/places/web-service/search)
   ********************************/
-
-  $.ajax({
-    method: 'POST',
-    url: 'https://api.yelp.com/oauth2/token'
-    
-  })
+let infoLoad = () => {
+  $.ajax( {
+    url: remoteUrlWithOrigin,
+    data: queryData,
+    dataType: 'json',
+    type: 'POST',
+    headers: { 'Api-User-Agent': 'Example/1.0' },
+    success: function(data) {
+      console.log(data);
+    }
+} );
+}
 
   /********************************
     button listener events
@@ -148,6 +157,7 @@ $(document).ready(function() {
 
   $('.waypoint').click(createWaypoint);
   $('.search').click(setRoute);
+  $('.moreInfo').click(infoLoad);
 })
 
 //Yelp App ID vzr5Q_hYVbvNfHwnKJd1bg
