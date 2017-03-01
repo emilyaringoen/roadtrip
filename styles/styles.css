@@ -1,3 +1,4 @@
+/********   whole site   *********/
 * {
     font-family: 'Biryani', sans-serif;
 }
@@ -6,6 +7,7 @@ body {
   background-repeat: repeat;
 }
 
+/********   splash page   *********/
 .backgroundImg {
     background: url('https://images3.alphacoders.com/808/80877.jpg') no-repeat center center fixed;
     height: 100vh;
@@ -22,20 +24,33 @@ body {
     font-weight: 200;
 }
 
-.frontP {
-  font-weight: 300;
-  color: black;
-}
-
-
 .btnSplash {
   background-color: #dfdfda;
   margin: 0 1em;
 }
 
+#btnSplash1 {
+  margin-left: -1em;
+}
+
+.center-block {
+    width: 100vw;
+    display: inline-block;
+    margin: 25vh auto;
+    text-align: center;
+}
+
+/*.center-block .input-group {
+    background-color: #dfdfda;
+    margin: auto;
+}*/
+
+
+/********   page two   *********/
 #logo2 {
     font-weight: 900;
     color: black;
+    margin-left: 2em;
 }
 
 #trip2 {
@@ -55,28 +70,16 @@ body {
   background-color: rgb(255, 217, 155);
 }
 
-.center-block {
-    width: 100vw;
-    display: inline-block;
-    margin: 25vh auto;
-    text-align: center;
-}
-
-.center-block .input-group {
-    background-color: #dfdfda;
-    margin: auto;
-}
-
 #map {
-    margin: 20px 40px;
-    height: 80vh;
+     margin: 1.25em 2em 1.25em 2em;
+    height: 50vh;
 }
 
 #sidePanel {
-    height: 80vh;
-    margin: 20px;
+    height: 20vh;
+     margin: 1.25em 2em 1.25em 2em;
     background-color: rgba(203, 230, 163, 0.4);
-    border: .5px solid rgb(105, 105, 106);
+    padding: 1.5em;
 }
 
 #searchPanel {
@@ -103,11 +106,14 @@ body {
     border-bottom: .5px solid #828385;
 }
 
+/********   routes page   *********/
+
 .block-btn {
     font-weight: 300;
-    display: block;
-    width: 11em;
-    margin: 2.25em auto;
+    font-size: 1em;
+    display: inline-block;
+    width: 8.5em;
+    margin: 1em auto;
     background-color: #FFF;
 }
 
@@ -118,4 +124,39 @@ body {
 
 #block-btn-search {
   width: 3.5em;
+  display: block;
+  margin: auto;
 }
+
+.photos {
+  margin: 3em;
+}
+
+/********   media queries   *********/
+
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width:992px) {
+  #map {
+      margin: 1.25em 2em 1.25em 4em;
+      height: 80vh;
+  }
+
+  #sidePanel {
+      height: 80vh;
+      margin: 1.24em 2em;
+      background-color: rgba(203, 230, 163, 0.4);
+      padding: 4em;
+  }
+
+  .block-btn {
+      font-weight: 300;
+      display: block;
+      width: 11em;
+      margin: 2.25em auto;
+      background-color: #FFF;
+  }
+
+ }
+
+/* Large devices (large desktops, 1200px and up) */

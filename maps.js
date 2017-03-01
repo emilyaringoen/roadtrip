@@ -3,6 +3,12 @@ $(document).ready(function() {
   var userDestination
   var endDestination
   var waypoints = []
+  var tripPlaces = []
+  var accumulator = {
+    day: 0,
+    hour: 0,
+    min: 0
+  }
 
   /********************************
       Make Map on page load
@@ -33,13 +39,17 @@ $(document).ready(function() {
   ********************************/
 
   let setRoute = () => {
+    tripPlaces = []
+    waypoints = []
     userDestination = $('#startDestination').val()
     endDestination = $('#endDestination').val()
-
+    tripPlaces.push(userDestination)
+    tripPlaces.push(endDestination)
     let directionsService = new google.maps.DirectionsService;
     let directionsDisplay = new google.maps.DirectionsRenderer;
     for (var i = 1; i <= stopPoints; i++) {
       let stop = $(`#waypoint${i}`);
+      tripPlaces.push(stop.val())
       let value = {
         location: stop.val()
       }
@@ -67,12 +77,11 @@ $(document).ready(function() {
             distance: 0,
             duration: 0
           }
-          console.log(response);
           let durations = ''
           let distances = []
 
           for (var i = 0; i < response.routes[0].legs.length; i++) {
-            let distance = response.routes[0].legs[0].distance.text
+            let distance = response.routes[0].legs[i].distance.text
             distance = distance.replace(',', '')
             distance = parseInt(distance)
             let duration = response.routes[0].legs[i].duration.text
@@ -81,7 +90,6 @@ $(document).ready(function() {
             } else {
               durations += ('0 hrs ' + duration + ' ')
             }
-
             distances.push(distance)
             legs.distance += distance
           }
@@ -103,7 +111,7 @@ $(document).ready(function() {
     }
 
     calculateAndDisplayRoute(directionsService, directionsDisplay)
-
+    photoSearch()
   }
 
   /********************************
@@ -111,24 +119,29 @@ $(document).ready(function() {
   ********************************/
 
   let durationCalculator = (string) => {
-    let hourAcc = 0
-    let minAcc = 0
+    accumulator.day = 0
+    accumulator.hour = 0
+    accumulator.min = 0
+    let totalDuration;
+    let arr = string.split(' ')
+    for (var i = 1; i < arr.length; i++) {
+      if (i % 2 === 1) {
+        accumulator[arr[i].replace(/s/, '')] += parseInt(arr[i - 1])
+      }
+    }
 
-    let durationsArr = string.split(' ')
-    for (var i = 0; i < durationsArr.length; i += 4) {
-      let hours = +(durationsArr[i])
-      hourAcc += hours
+    accumulator.day += Math.floor(accumulator.hour / 24)
+    accumulator.hour = accumulator.hour % 24
+    accumulator.hour += Math.floor(accumulator.min / 60)
+    accumulator.min = accumulator.min % 60
+
+
+    if (accumulator.day > 0) {
+      totalDuration = accumulator.day + ' days ' + accumulator.hour + ' hours ' + accumulator.min + ' minutes'
+    } else {
+      totalDuration = accumulator.hour + ' hours ' + accumulator.min + ' minutes'
     }
-    for (var i = 2; i < durationsArr.length; i += 4) {
-      let min = +(durationsArr[i])
-      minAcc += min
-    }
-    // }
-    if (minAcc > 60) {
-      hourAcc += Math.round(minAcc / 60)
-      minAcc = minAcc % 60
-    }
-    let totalDuration = hourAcc + ' hours ' + minAcc + ' minutes'
+
     return totalDuration
   }
 
@@ -176,19 +189,91 @@ $(document).ready(function() {
     calculateAndDisplayRoute(directionsService, directionsDisplay)
 
   }
+  /********************************
+    flickr api
+  ********************************/
+  let photoSearch = () => {
+    console.log(tripPlaces);
+    let apiKey = '554b06bf7905da567bf55befe04d6984'
+    for (var i = 0; i < tripPlaces.length; i++) {
+      let place = tripPlaces[i]
+      $.ajax({
+        method: 'GET',
+        url: 'https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=' + apiKey + '&tags=' + tripPlaces[i] + '&safe_search=1&format=json',
+        success: function(data) {
+          data = data.substring(14,data.length-1);
+          var jsonData = JSON.parse(data);
+          let firstPhoto = jsonData.photos.photo[0]
+            //build the url of the photo in order to link to it
+            var photoURL = 'http://farm' + firstPhoto.farm + '.static.flickr.com/' + firstPhoto.server + '/' + firstPhoto.id + '_' + firstPhoto.secret + '_m.jpg'
+            var img = `<div class="row"><div class="col-sm-6 col-md-4"><div class="thumbnail"><img src="${photoURL}" alt="Photo of ${place}"><div class="caption"><h3>${place}</h3></div></div></div></div>`
+            $('#imgContainer').append(img)
+        },
+        error: function() {
+          console.log('whoops. what did you do.');
+        }
+      })
+    }
+  }
+
+
+
+
 
   /********************************
     button listener events
   ********************************/
   $('.waypoint').click(createWaypoint);
   $('.search').click(setRoute);
-  $('#pacific').click(() => tripRoutes('San Diego', 'Seattle', [{location: 'Los Angeles'}, {location: 'Santa Barbara'}, {location: 'Big Sur'}, {location: 'San Fransisco'}, {location:
-    'Red Woods'}]))
-  $('#routeSixty').click(() => tripRoutes('Chicago', 'Grand Canyon', [{location: 'Saint Louis'}, {location: 'Meramec Caverns'}, {location: 'Labanon, MO'}, {location: 'Clinton, OK'}, {location: 'El Morro National Monument'}]))
-  $('#lonely-desert').click(() => tripRoutes('Moab', 'Sedona', [{location: 'Monticello, UT'}, {location: 'Monument Valley'}, {location: 'Grand Canyon'}]))
-  $('#wild-west').click(() => tripRoutes('Aspen', 'Glacier National Park', [{location: 'Rocky Mountain National park'}, {location: 'Yellow Stone'}, {location: 'Grand Teton National Park'}, {location: 'Bozeman'}]))
-  $('#east-coast').click(() => tripRoutes('Portland, ME', 'Washington, DC', [{location: 'Boston'}, {location: 'Mystic, CN'}, {location: 'New York City'}, {location: 'Philadelphia'}]))
+  // $('#pacific').click(() => tripRoutes('Santa Barbara', 'Gold Beach, OR', [{
+  //   location: 'Big Sur'
+  // }, {
+  //   location: 'San Fransisco'
+  // }, {
+  //   location: 'Red Woods'
+  // }]))
+  // $('#routeSixty').click(() => tripRoutes('Chicago', 'Grand Canyon', [{
+  //   location: 'Saint Louis'
+  // }, {
+  //   location: 'Meramec Caverns'
+  // }, {
+  //   location: 'Labanon, MO'
+  // }, {
+  //   location: 'Clinton, OK'
+  // }, {
+  //   location: 'El Morro National Monument'
+  // }]))
+  // $('#lonely-desert').click(() => tripRoutes('Moab', 'Sedona', [{
+  //   location: 'Monticello, UT'
+  // }, {
+  //   location: 'Monument Valley'
+  // }, {
+  //   location: 'Grand Canyon'
+  // }]))
+  // $('#wild-west').click(() => tripRoutes('Aspen', 'Glacier National Park', [{
+  //   location: 'Rocky Mountain National park'
+  // }, {
+  //   location: 'Yellow Stone'
+  // }, {
+  //   location: 'Grand Teton National Park'
+  // }, {
+  //   location: 'Bozeman'
+  // }]))
+  // $('#east-coast').click(() => tripRoutes('Portland, ME', 'Washington, DC', [{
+  //   location: 'Boston'
+  // }, {
+  //   location: 'Mystic, CN'
+  // }, {
+  //   location: 'New York City'
+  // }, {
+  //   location: 'Philadelphia'
+  // }]))
 })
 
-//Yelp App ID vzr5Q_hYVbvNfHwnKJd1bg
-// yelp app secret YXW2tdSKOogmCDYT2HbHSsjb8edQRf7lsmSozQnWx2XBWQs5Ugq979J56XO1gZ0h
+
+// RoadTrip
+// Key:
+// 554b06bf7905da567bf55befe04d6984
+//
+// Secret:
+// 4bc24675d2bd24d1
