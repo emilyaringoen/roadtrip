@@ -1,84 +1,121 @@
+* {
+    font-family: 'Biryani', sans-serif;
+}
+body {
+  background-image: url('http://subtlepatterns.com/patterns/topography.png');
+  background-repeat: repeat;
+}
+
 .backgroundImg {
-  background: url('https://images3.alphacoders.com/808/80877.jpg') no-repeat center center fixed;
-  height: 100vh;
-  width:100%;
+    background: url('https://images3.alphacoders.com/808/80877.jpg') no-repeat center center fixed;
+    height: 100vh;
+    width: 100%;
 }
 
 #title {
-  font-family: 'Sigmar One', cursive;
-  color: #dfdfda;
-  font-size: 15vmin;
+    font-weight: 900;
+    color: #dfdfda;
+    font-size: 15vmin;
 }
 
-#trip{
-  font-family: 'Lato', sans-serif;
+#trip {
+    font-weight: 200;
+}
+
+.frontP {
+  font-weight: 300;
+  color: black;
+}
+
+
+.btnSplash {
+  background-color: #dfdfda;
+  margin: 0 1em;
 }
 
 #logo2 {
-    font-family: 'Sigmar One', cursive;
+    font-weight: 900;
     color: black;
 }
 
-#trip2{
-  font-family: 'Lato', sans-serif;
+#trip2 {
+    font-weight:300;
+    color: rgb(230, 178, 94);
 }
 
-.btn {
-  font-family: 'Sigmar One', cursive;
+.btn.btn-default.waypoint.btnPage2{
+  padding-left:10px;
+  padding-right:10px;
+  margin-left:10px;
+  margin-right:10px;
+}
+
+.btnPage2:hover,
+.btnPage2:active {
+  background-color: rgb(255, 217, 155);
 }
 
 .center-block {
-  width: 100vw;
-  display: inline-block;
-  margin: 25vh auto;
-  text-align: center;
+    width: 100vw;
+    display: inline-block;
+    margin: 25vh auto;
+    text-align: center;
 }
 
 .center-block .input-group {
-  font-family: 'Lato', sans-serif;
-  background-color: #dfdfda;
-  margin: auto;
-
+    background-color: #dfdfda;
+    margin: auto;
 }
 
 #map {
-  margin: 20px 40px;
-  height: 80vh;
+    margin: 20px 40px;
+    height: 80vh;
 }
 
 #sidePanel {
-  height: 80vh;
-  margin: 20px;
-  background-color: #ced0d1;
+    height: 80vh;
+    margin: 20px;
+    background-color: rgba(203, 230, 163, 0.4);
+    border: .5px solid rgb(105, 105, 106);
 }
 
 #searchPanel {
-  margin: 100px auto;
-  margin-bottom: 20px;
+    margin: 100px auto;
+    margin-bottom: 20px;
 }
 
-#page2{
-  height: 100vh;
+#page2 {
+    height: 100vh;
 }
 
-
-#miles, #time {
-  padding: 6px 12px;
-  font-size: 14px;
-  border: 1px solid #828385;
-  border-radius: 3px;
-  font-family: 'Lato', sans-serif;
-  color: #555;
-  background-color: #FFFFFF;
+#miles, #time, #gas {
+    padding: 6px 12px;
+    font-size: 16px;
+    border: 1px solid #828385;
+    border-radius: 3px;
+    color: #555;
+    background-color: #FFFFFF;
+    margin: 1em 0 0 0;
 }
-
-#miles {
-  margin: 1em 0 0 0;
-}
-
-
 
 .navbar {
-  background-color: #ced0d1;
-  border-bottom: .5px solid #828385;
+    background-color: #e8eaeb;
+    border-bottom: .5px solid #828385;
+}
+
+.block-btn {
+    font-weight: 300;
+    display: block;
+    width: 11em;
+    margin: 2.25em auto;
+    background-color: #FFF;
+}
+
+.block-btn:active,
+.block-btn:hover {
+  background-color: rgb(255, 217, 155);
+}
+
+#block-btn-search {
+  width: 3.5em;
 }

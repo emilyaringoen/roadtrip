@@ -72,7 +72,9 @@ $(document).ready(function() {
           let distances = []
 
           for (var i = 0; i < response.routes[0].legs.length; i++) {
-            let distance = parseInt(response.routes[0].legs[i].distance.text)
+            let distance = response.routes[0].legs[0].distance.text
+            distance = distance.replace(',', '')
+            distance = parseInt(distance)
             let duration = response.routes[0].legs[i].duration.text
             if (duration.includes('hours')) {
               durations += (duration + ' ')
@@ -82,14 +84,17 @@ $(document).ready(function() {
 
             distances.push(distance)
             legs.distance += distance
-
           }
 
           let durationTotal = durationCalculator(durations)
-
+          let averageMPG = 24
+          let averageFuelCost = 2.29
+          let gallonsPerTrip = (legs.distance) / averageMPG
+          let costPerFuel = (averageFuelCost * gallonsPerTrip).toFixed(2)
 
           $('#duration').html(`<p id="time">Drive Time: <strong>${durationTotal}</strong></p>`)
           $('#distance').html(`<p id="miles">Total Miles: <strong>${legs.distance} miles</strong></p>`)
+          $('#fuel').html(`<p id="gas">Fuel Cost: <strong>$${costPerFuel}</strong></p>`)
 
         } else {
           window.alert('Directions request failed due to ' + status)
@@ -132,32 +137,57 @@ $(document).ready(function() {
   ********************************/
   let createWaypoint = () => {
     stopPoints += 1
-    $(`<input type="text" class="form-control" id="waypoint${stopPoints}" placeholder="Waypoint: City, State">`).insertBefore('#endDestination')
+    $(`<input type="text" class="form-control" id="waypoint${stopPoints}" placeholder="Waypoint">`).insertBefore('#endDestination')
   }
 
   /********************************
-    ajax calls (https://developers.google.com/places/web-service/search)
+    function to create input bars for waypoint entry
   ********************************/
-let infoLoad = () => {
-  $.ajax( {
-    url: remoteUrlWithOrigin,
-    data: queryData,
-    dataType: 'json',
-    type: 'POST',
-    headers: { 'Api-User-Agent': 'Example/1.0' },
-    success: function(data) {
-      console.log(data);
+
+  let tripRoutes = (start, end, waypoints) => {
+
+    let directionsService = new google.maps.DirectionsService;
+    let directionsDisplay = new google.maps.DirectionsRenderer;
+
+    let map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 4,
+      center: {
+        lat: 39.8282,
+        lng: -98.5795
+      }
+    });
+    directionsDisplay.setMap(map);
+
+    let calculateAndDisplayRoute = (directionsService, directionsDisplay) => {
+      directionsService.route({
+        origin: start,
+        destination: end,
+        waypoints: waypoints,
+        travelMode: 'DRIVING'
+      }, function(response, status) {
+        if (status === 'OK') {
+          directionsDisplay.setDirections(response)
+        } else {
+          window.alert('Directions request failed due to ' + status)
+        }
+      })
     }
-} );
-}
+
+    calculateAndDisplayRoute(directionsService, directionsDisplay)
+
+  }
 
   /********************************
     button listener events
   ********************************/
-
   $('.waypoint').click(createWaypoint);
   $('.search').click(setRoute);
-  $('.moreInfo').click(infoLoad);
+  $('#pacific').click(() => tripRoutes('San Diego', 'Seattle', [{location: 'Los Angeles'}, {location: 'Santa Barbara'}, {location: 'Big Sur'}, {location: 'San Fransisco'}, {location:
+    'Red Woods'}]))
+  $('#routeSixty').click(() => tripRoutes('Chicago', 'Grand Canyon', [{location: 'Saint Louis'}, {location: 'Meramec Caverns'}, {location: 'Labanon, MO'}, {location: 'Clinton, OK'}, {location: 'El Morro National Monument'}]))
+  $('#lonely-desert').click(() => tripRoutes('Moab', 'Sedona', [{location: 'Monticello, UT'}, {location: 'Monument Valley'}, {location: 'Grand Canyon'}]))
+  $('#wild-west').click(() => tripRoutes('Aspen', 'Glacier National Park', [{location: 'Rocky Mountain National park'}, {location: 'Yellow Stone'}, {location: 'Grand Teton National Park'}, {location: 'Bozeman'}]))
+  $('#east-coast').click(() => tripRoutes('Portland, ME', 'Washington, DC', [{location: 'Boston'}, {location: 'Mystic, CN'}, {location: 'New York City'}, {location: 'Philadelphia'}]))
 })
 
 //Yelp App ID vzr5Q_hYVbvNfHwnKJd1bg
