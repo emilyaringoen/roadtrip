@@ -73,13 +73,15 @@ body {
 #map {
      margin: 1.25em 2em 1.25em 2em;
     height: 50vh;
+    border-radius: 25px;
 }
 
 #sidePanel {
     height: 20vh;
-     margin: 1.25em 2em 1.25em 2em;
-    background-color: rgba(203, 230, 163, 0.4);
+    margin: 1.25em 2em 1.25em 2em;
+    background-color: rgba(184, 230, 163, 0.4);
     padding: 1.5em;
+    border-radius: 25px;
 }
 
 #searchPanel {
@@ -104,6 +106,17 @@ body {
 .navbar {
     background-color: #e8eaeb;
     border-bottom: .5px solid #828385;
+}
+
+.weather {
+  margin: 5em 2em 5em 4em;
+  border: none;
+  background-color: rgba(163, 204, 255, 0.5);
+  padding: 4em 2em;
+}
+
+.sideBorder {
+  border-right: .5px solid #7e7e7d
 }
 
 /********   routes page   *********/

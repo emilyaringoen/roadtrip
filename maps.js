@@ -10,6 +10,7 @@ $(document).ready(function() {
     min: 0
   }
 
+
   /********************************
       Make Map on page load
   ********************************/
@@ -47,6 +48,8 @@ $(document).ready(function() {
     tripPlaces.push(endDestination)
     let directionsService = new google.maps.DirectionsService;
     let directionsDisplay = new google.maps.DirectionsRenderer;
+    $('#weather').empty()
+
     for (var i = 1; i <= stopPoints; i++) {
       let stop = $(`#waypoint${i}`);
       tripPlaces.push(stop.val())
@@ -62,6 +65,7 @@ $(document).ready(function() {
         lng: -98.5795
       }
     });
+    let infowindow = new google.maps.InfoWindow()
     directionsDisplay.setMap(map);
 
     let calculateAndDisplayRoute = (directionsService, directionsDisplay) => {
@@ -73,6 +77,8 @@ $(document).ready(function() {
       }, function(response, status) {
         if (status === 'OK') {
           directionsDisplay.setDirections(response)
+
+
           let legs = {
             distance: 0,
             duration: 0
@@ -109,9 +115,8 @@ $(document).ready(function() {
         }
       })
     }
-
+    weather()
     calculateAndDisplayRoute(directionsService, directionsDisplay)
-    photoSearch()
   }
 
   /********************************
@@ -190,90 +195,115 @@ $(document).ready(function() {
 
   }
   /********************************
-    flickr api
+    weather api
   ********************************/
-  let photoSearch = () => {
-    console.log(tripPlaces);
-    let apiKey = '554b06bf7905da567bf55befe04d6984'
+  let weather = () => {
+    let apiId = 'bd545da109eb3ed82496113b3eaa590d'
     for (var i = 0; i < tripPlaces.length; i++) {
-      let place = tripPlaces[i]
+      let cityName = tripPlaces[i]
       $.ajax({
         method: 'GET',
-        url: 'https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=' + apiKey + '&tags=' + tripPlaces[i] + '&safe_search=1&format=json',
+        // url: `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&APPID=bd545da109eb3ed82496113b3eaa590d&units=metric`,
+        url: `http://api.openweathermap.org/data/2.5/forecast/daily?q=${cityName}&cnt=5&APPID=bd545da109eb3ed82496113b3eaa590d&units=imperial`,
+        dataType: 'json',
         success: function(data) {
-          data = data.substring(14,data.length-1);
-          var jsonData = JSON.parse(data);
-          let firstPhoto = jsonData.photos.photo[0]
-            //build the url of the photo in order to link to it
-            var photoURL = 'http://farm' + firstPhoto.farm + '.static.flickr.com/' + firstPhoto.server + '/' + firstPhoto.id + '_' + firstPhoto.secret + '_m.jpg'
-            var img = `<div class="row"><div class="col-sm-6 col-md-4"><div class="thumbnail"><img src="${photoURL}" alt="Photo of ${place}"><div class="caption"><h3>${place}</h3></div></div></div></div>`
-            $('#imgContainer').append(img)
-        },
-        error: function() {
-          console.log('whoops. what did you do.');
+          let row = $(`<div class="row weather"><div class="col-sm-2">
+            <h3>${cityName}</h3>
+          </div></div>`)
+          for (var i = 0; i < data.list.length; i++) {
+            let d = new Date()
+            d.setTime(data.list[i].dt * 1000)
+            dateString = d.toUTCString() // or d.toString if local time required
+            let date = dateString.substring(5, 14)
+            let day = Math.round(data.list[i].temp.day)
+            let night = Math.round(data.list[i].temp.night)
+            let description = data.list[i].weather[0].description
+            let icon = data.list[i].weather[0].icon
+            let iconURL = 'http://openweathermap.org/img/w/' + icon + '.png';
+            let card;
+            if (i === data.list.length -1 ) {
+              card = $(`<div class="col-sm-2 text-center">
+                <p><strong><u>${date}</u></strong></p>
+                <img src="${iconURL}">
+                <p>Weather: <strong>${description}</strong></p>
+                <p>Day Temp: <strong>${day}</strong></p>
+                <p>Night Temp: <strong>${night}</strong></p>
+              </div>`)
+            } else {
+              card = $(`<div class="col-sm-2 text-center sideBorder">
+                <p><strong><u>${date}</u></strong></p>
+                <img src="${iconURL}">
+                <p>Weather: <strong>${description}</strong></p>
+                <p>Day Temp: <strong>${day}</strong></p>
+                <p>Night Temp: <strong>${night}</strong></p>
+              </div>`)
+            }
+            row.append(card)
+          }
+          $('#weather').append(row)
         }
       })
     }
   }
 
 
-
-
+  /********************************
+    make marker function
+  ********************************/
+function makeMarker( position, title ) {
+ new google.maps.Marker({
+  position: position,
+  map: map,
+  title: title
+ });
+}
 
   /********************************
     button listener events
   ********************************/
   $('.waypoint').click(createWaypoint);
   $('.search').click(setRoute);
-  // $('#pacific').click(() => tripRoutes('Santa Barbara', 'Gold Beach, OR', [{
-  //   location: 'Big Sur'
-  // }, {
-  //   location: 'San Fransisco'
-  // }, {
-  //   location: 'Red Woods'
-  // }]))
-  // $('#routeSixty').click(() => tripRoutes('Chicago', 'Grand Canyon', [{
-  //   location: 'Saint Louis'
-  // }, {
-  //   location: 'Meramec Caverns'
-  // }, {
-  //   location: 'Labanon, MO'
-  // }, {
-  //   location: 'Clinton, OK'
-  // }, {
-  //   location: 'El Morro National Monument'
-  // }]))
-  // $('#lonely-desert').click(() => tripRoutes('Moab', 'Sedona', [{
-  //   location: 'Monticello, UT'
-  // }, {
-  //   location: 'Monument Valley'
-  // }, {
-  //   location: 'Grand Canyon'
-  // }]))
-  // $('#wild-west').click(() => tripRoutes('Aspen', 'Glacier National Park', [{
-  //   location: 'Rocky Mountain National park'
-  // }, {
-  //   location: 'Yellow Stone'
-  // }, {
-  //   location: 'Grand Teton National Park'
-  // }, {
-  //   location: 'Bozeman'
-  // }]))
-  // $('#east-coast').click(() => tripRoutes('Portland, ME', 'Washington, DC', [{
-  //   location: 'Boston'
-  // }, {
-  //   location: 'Mystic, CN'
-  // }, {
-  //   location: 'New York City'
-  // }, {
-  //   location: 'Philadelphia'
-  // }]))
+  $('#pacific').click(() => tripRoutes('Santa Barbara', 'Gold Beach, OR', [{
+    location: 'Big Sur'
+  }, {
+    location: 'San Fransisco'
+  }, {
+    location: 'Red Woods'
+  }]))
+  $('#routeSixty').click(() => tripRoutes('Chicago', 'Grand Canyon', [{
+    location: 'Saint Louis'
+  }, {
+    location: 'Meramec Caverns'
+  }, {
+    location: 'Labanon, MO'
+  }, {
+    location: 'Clinton, OK'
+  }, {
+    location: 'El Morro National Monument'
+  }]))
+  $('#lonely-desert').click(() => tripRoutes('Moab', 'Sedona', [{
+    location: 'Monticello, UT'
+  }, {
+    location: 'Monument Valley'
+  }, {
+    location: 'Grand Canyon'
+  }]))
+  $('#wild-west').click(() => tripRoutes('Aspen', 'Glacier National Park', [{
+    location: 'Rocky Mountain National park'
+  }, {
+    location: 'Yellow Stone'
+  }, {
+    location: 'Grand Teton National Park'
+  }, {
+    location: 'Bozeman'
+  }]))
+  $('#east-coast').click(() => tripRoutes('Portland, ME', 'Washington, DC', [{
+    location: 'Boston'
+  }, {
+    location: 'Mystic, CN'
+  }, {
+    location: 'New York City'
+  }, {
+    location: 'Philadelphia'
+  }]))
 })
-
-
-// RoadTrip
-// Key:
-// 554b06bf7905da567bf55befe04d6984
-//
-// Secret:
-// 4bc24675d2bd24d1
