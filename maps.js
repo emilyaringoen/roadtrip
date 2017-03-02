@@ -16,7 +16,7 @@ $(document).ready(function() {
   ********************************/
   let makeMap = () => {
     // Map options
-    var mapOptions = {
+    let mapOptions = {
       zoom: 4,
       center: new google.maps.LatLng(39.8282, -98.5795),
       panControl: false,
@@ -50,15 +50,6 @@ $(document).ready(function() {
     let directionsDisplay = new google.maps.DirectionsRenderer;
     $('#weather').empty()
 
-    // for (var i = 1; i <= stopPoints; i++) {
-    //   let stop = $(`#waypoint${i}`);
-    //   tripPlaces.push(stop.val())
-    //   let value = {
-    //     location: stop.val()
-    //   }
-    //   waypoints.push(value)
-    // }
-
       $(`.waypoint-input`).each(function(index, waypoint) {
          let stop = $(waypoint).val();
          tripPlaces.push(stop)
@@ -67,9 +58,6 @@ $(document).ready(function() {
          }
          waypoints.push(value)
       });
-
-
-
 
     let map = new google.maps.Map(document.getElementById('map'), {
       zoom: 4,
@@ -96,6 +84,7 @@ $(document).ready(function() {
             distance: 0,
             duration: 0
           }
+
           let durations = ''
           let distances = []
 
@@ -169,7 +158,6 @@ $(document).ready(function() {
   let createWaypoint = () => {
     stopPoints += 1
     $(`<input type="text" class="form-control waypoint waypoint-input" placeholder="Waypoint">`).insertBefore('#endDestination')
-    // $(`<input type="text" class="form-control waypoint" id="waypoint${stopPoints}" placeholder="Waypoint">`).insertBefore('#endDestination')
   }
 
 $('#searchPanel').on('dblclick', '.waypoint', function(){
@@ -250,7 +238,7 @@ $('#searchPanel').on('dblclick', '.waypoint', function(){
           let row = $(`<div class="row weather"><div class="col-sm-2">
             <h3>${cityName}</h3>
           </div></div>`)
-          console.log(data);
+
           for (var i = 0; i < data.list.length; i++) {
 
             let d = new Date()
@@ -262,8 +250,7 @@ $('#searchPanel').on('dblclick', '.waypoint', function(){
             let description = data.list[i].weather[0].description
             let icon = data.list[i].weather[0].icon
             let iconURL = weatherIcon[icon];
-            console.log(icon);
-            console.log(iconURL);
+            
             let card;
             if (i === data.list.length -1 ) {
               card = $(`<div class="col-sm-2 text-center">
