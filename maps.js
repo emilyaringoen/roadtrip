@@ -50,14 +50,27 @@ $(document).ready(function() {
     let directionsDisplay = new google.maps.DirectionsRenderer;
     $('#weather').empty()
 
-    for (var i = 1; i <= stopPoints; i++) {
-      let stop = $(`#waypoint${i}`);
-      tripPlaces.push(stop.val())
-      let value = {
-        location: stop.val()
-      }
-      waypoints.push(value)
-    }
+    // for (var i = 1; i <= stopPoints; i++) {
+    //   let stop = $(`#waypoint${i}`);
+    //   tripPlaces.push(stop.val())
+    //   let value = {
+    //     location: stop.val()
+    //   }
+    //   waypoints.push(value)
+    // }
+
+      $(`.waypoint-input`).each(function(index, waypoint) {
+         let stop = $(waypoint).val();
+         tripPlaces.push(stop)
+         let value = {
+           location: stop
+         }
+         waypoints.push(value)
+      });
+
+
+
+
     let map = new google.maps.Map(document.getElementById('map'), {
       zoom: 4,
       center: {
@@ -155,8 +168,14 @@ $(document).ready(function() {
   ********************************/
   let createWaypoint = () => {
     stopPoints += 1
-    $(`<input type="text" class="form-control" id="waypoint${stopPoints}" placeholder="Waypoint">`).insertBefore('#endDestination')
+    $(`<input type="text" class="form-control waypoint waypoint-input" placeholder="Waypoint">`).insertBefore('#endDestination')
+    // $(`<input type="text" class="form-control waypoint" id="waypoint${stopPoints}" placeholder="Waypoint">`).insertBefore('#endDestination')
   }
+
+$('#searchPanel').on('dblclick', '.waypoint', function(){
+  $(event.target).remove();
+})
+
 
   /********************************
     function to create input bars for waypoint entry
@@ -197,6 +216,27 @@ $(document).ready(function() {
   /********************************
     weather api
   ********************************/
+  var weatherIcon = {
+    '01d': 'simple_weather_icon_01.png',
+    '02d': 'simple_weather_icon_04.png',
+    '03d': 'simple_weather_icon_04.png',
+    '04d': 'simple_weather_icon_04.png',
+    'O9d': 'simple_weather_icon_11.png',
+    '10d': 'simple_weather_icon_22.png',
+    '11d': 'simple_weather_icon_27.png',
+    '13d': 'simple_weather_icon_25.png',
+    '50d': 'simple_weather_icon_09.png',
+    '01n': 'simple_weather_icon_02.png',
+    'O2n': 'simple_weather_icon_07.png',
+    '03n': 'simple_weather_icon_07.png',
+    '04n': 'simple_weather_icon_07.png',
+    'O9n': 'simple_weather_icon_32.png',
+    '10n': 'simple_weather_icon_22.png',
+    '11n': 'simple_weather_icon_37.png',
+    '13n': 'simple_weather_icon_25.png',
+    '50n': 'simple_weather_icon_09.png'
+  }
+
   let weather = () => {
     let apiId = 'bd545da109eb3ed82496113b3eaa590d'
     for (var i = 0; i < tripPlaces.length; i++) {
@@ -210,7 +250,9 @@ $(document).ready(function() {
           let row = $(`<div class="row weather"><div class="col-sm-2">
             <h3>${cityName}</h3>
           </div></div>`)
+          console.log(data);
           for (var i = 0; i < data.list.length; i++) {
+
             let d = new Date()
             d.setTime(data.list[i].dt * 1000)
             dateString = d.toUTCString() // or d.toString if local time required
@@ -219,23 +261,25 @@ $(document).ready(function() {
             let night = Math.round(data.list[i].temp.night)
             let description = data.list[i].weather[0].description
             let icon = data.list[i].weather[0].icon
-            let iconURL = 'http://openweathermap.org/img/w/' + icon + '.png';
+            let iconURL = weatherIcon[icon];
+            console.log(icon);
+            console.log(iconURL);
             let card;
             if (i === data.list.length -1 ) {
               card = $(`<div class="col-sm-2 text-center">
                 <p><strong><u>${date}</u></strong></p>
-                <img src="${iconURL}">
-                <p>Weather: <strong>${description}</strong></p>
-                <p>Day Temp: <strong>${day}</strong></p>
-                <p>Night Temp: <strong>${night}</strong></p>
+                <img src="styles/weather/${iconURL}" class="weatherPic"><br>
+                <p>Weather: <br><strong>${description}</strong></p>
+                <p>Day Temp: <strong>${day}°F</strong></p>
+                <p>Night Temp: <strong>${night}°F</strong></p>
               </div>`)
             } else {
               card = $(`<div class="col-sm-2 text-center sideBorder">
                 <p><strong><u>${date}</u></strong></p>
-                <img src="${iconURL}">
-                <p>Weather: <strong>${description}</strong></p>
-                <p>Day Temp: <strong>${day}</strong></p>
-                <p>Night Temp: <strong>${night}</strong></p>
+                <img src="styles/weather/${iconURL}" class="weatherPic"><br>
+                <p>Weather: <br><strong>${description}</strong></p>
+                <p>Day Temp: <strong>${day}°F</strong></p>
+                <p>Night Temp: <strong>${night}°F</strong></p>
               </div>`)
             }
             row.append(card)
@@ -261,49 +305,29 @@ function makeMarker( position, title ) {
   /********************************
     button listener events
   ********************************/
-  $('.waypoint').click(createWaypoint);
-  $('.search').click(setRoute);
-  $('#pacific').click(() => tripRoutes('Santa Barbara', 'Gold Beach, OR', [{
-    location: 'Big Sur'
-  }, {
-    location: 'San Fransisco'
-  }, {
-    location: 'Red Woods'
-  }]))
-  $('#routeSixty').click(() => tripRoutes('Chicago', 'Grand Canyon', [{
-    location: 'Saint Louis'
-  }, {
-    location: 'Meramec Caverns'
-  }, {
-    location: 'Labanon, MO'
-  }, {
-    location: 'Clinton, OK'
-  }, {
-    location: 'El Morro National Monument'
-  }]))
-  $('#lonely-desert').click(() => tripRoutes('Moab', 'Sedona', [{
-    location: 'Monticello, UT'
-  }, {
-    location: 'Monument Valley'
-  }, {
-    location: 'Grand Canyon'
-  }]))
-  $('#wild-west').click(() => tripRoutes('Aspen', 'Glacier National Park', [{
-    location: 'Rocky Mountain National park'
-  }, {
-    location: 'Yellow Stone'
-  }, {
-    location: 'Grand Teton National Park'
-  }, {
-    location: 'Bozeman'
-  }]))
-  $('#east-coast').click(() => tripRoutes('Portland, ME', 'Washington, DC', [{
-    location: 'Boston'
-  }, {
-    location: 'Mystic, CN'
-  }, {
-    location: 'New York City'
-  }, {
-    location: 'Philadelphia'
-  }]))
+  $('.waypoint').click(createWaypoint)
+  $('.search').click(setRoute)
+
+
 })
+
+let weatherIcon = {
+  '01d': 'simple_weather_icon_01.png',
+  'O2d': 'simple_weather_icon_04.png',
+  '03d': 'simple_weather_icon_04.png',
+  '04d': 'simple_weather_icon_04.png',
+  'O9d': 'simple_weather_icon_11.png',
+  '10d': 'simple_weather_icon_22.png',
+  '11d': 'simple_weather_icon_27.png',
+  '13d': 'simple_weather_icon_25.png',
+  '50d': 'simple_weather_icon_09.png',
+  '01n': 'simple_weather_icon_02.png',
+  'O2n': 'simple_weather_icon_07.png',
+  '03n': 'simple_weather_icon_07.png',
+  '04n': 'simple_weather_icon_07.png',
+  'O9n': 'simple_weather_icon_32.png',
+  '10n': 'simple_weather_icon_22.png',
+  '11n': 'simple_weather_icon_37.png',
+  '13n': 'simple_weather_icon_25.png',
+  '50n': 'simple_weather_icon_09.png'
+}

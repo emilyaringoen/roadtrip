@@ -10,7 +10,7 @@ body {
 /********   splash page   *********/
 .backgroundImg {
     background: url('https://images3.alphacoders.com/808/80877.jpg') no-repeat center center fixed;
-    height: 100vh;
+    height: 70vh;
     width: 100%;
 }
 
@@ -25,6 +25,7 @@ body {
 }
 
 .btnSplash {
+  font-size: 1.25em;
   background-color: #dfdfda;
   margin: 0 1em;
 }
@@ -73,19 +74,19 @@ body {
 #map {
      margin: 1.25em 2em 1.25em 2em;
     height: 50vh;
-    border-radius: 25px;
+    border-radius: 3px;
 }
 
 #sidePanel {
-    height: 20vh;
-    margin: 1.25em 2em 1.25em 2em;
+    height: 50vh;
+    margin: .5em 2em 1.25em 2em;
     background-color: rgba(184, 230, 163, 0.4);
     padding: 1.5em;
-    border-radius: 25px;
+    border-radius: 3px;
 }
 
 #searchPanel {
-    margin: 100px auto;
+    margin: auto;
     margin-bottom: 20px;
 }
 
@@ -111,6 +112,7 @@ body {
 .weather {
   margin: 5em 2em 5em 4em;
   border: none;
+  border-radius: 3px;
   background-color: rgba(163, 204, 255, 0.5);
   padding: 4em 2em;
 }
@@ -119,9 +121,19 @@ body {
   border-right: .5px solid #7e7e7d
 }
 
+h3{
+  font-weight: 600;
+  text-align: center;
+}
+
+.weatherPic {
+  height: 2em;
+  margin: 8px;
+}
+
 /********   routes page   *********/
 
-.block-btn {
+/*.block-btn {
     font-weight: 300;
     font-size: 1em;
     display: inline-block;
@@ -143,7 +155,7 @@ body {
 
 .photos {
   margin: 3em;
-}
+}*/
 
 /********   media queries   *********/
 
@@ -168,6 +180,11 @@ body {
       width: 11em;
       margin: 2.25em auto;
       background-color: #FFF;
+  }
+
+  .backgroundImg {
+      height: 100vh;
+      width: 100%;
   }
 
  }
