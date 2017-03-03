@@ -19,7 +19,7 @@
 
 <body>
     <div class="container backgroundImg">
-        <div class="center-block">
+        <div class="center-block container">
             <h1 id="title">Road<span id="trip">trip</span></h1>
             <div class="row" id="">
                 <div class="col-sm-5"></div>
@@ -29,14 +29,14 @@
         </div>
     </div>
     <div id="page2">
-        <nav class="navbar navbar-default">
+        <nav class="navbar navbar-default container-fluid">
             <div class="row">
                 <div class="col-sm-6">
                     <h1 id="logo2">Road<span id="trip2">trip</span></h1>
                 </div>
             </div>
         </nav>
-        <div class="container-fluid">
+        <main class="container-fluid">
             <div class="row">
 
                 <div class="col-xs-12 col-sm-12 col-md-8">
@@ -51,18 +51,19 @@
                         </div>
                         <button class="btn btn-default search btnPage2" type="button" data-toggle="tooltip" title="Map your route."><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                         <button class="btn btn-default waypoint btnPage2" type="button" data-toggle="tooltip" title="Add a waypoint"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button>
-                        <div>
+                        <article>
                             <div id="distance"></div>
                             <div id="duration"></div>
                             <div id="fuel"></div>
-                        </div>
+                            <div id="viewWeather"></div>
+                        </article>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="container-fluid">
+        </main>
+        <section class="container-fluid">
             <div id="weather"></div>
-        </div>
+        </section>
 
 </body>
 

@@ -95,7 +95,7 @@ body {
 }
 
 #miles, #time, #gas {
-    padding: 6px 12px;
+    padding: 8px 12px 6px 12px;
     font-size: 16px;
     border: 1px solid #828385;
     border-radius: 3px;
@@ -129,6 +129,24 @@ h3{
 .weatherPic {
   height: 2em;
   margin: 8px;
+}
+
+#view-weather {
+  padding-left:10px;
+  padding-right:10px;
+  margin-top: 2em;
+  margin-left:10px;
+  margin-right:10px;
+  font-weight: 600;
+}
+
+#weather-btn {
+  height: 2em;
+}
+
+#view-weather:active,
+#view-weather:hover {
+    background-color: rgb(255, 217, 155);
 }
 
 /********   routes page   *********/
