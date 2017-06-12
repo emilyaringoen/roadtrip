@@ -18,17 +18,18 @@
 </head>
 
 <body>
-    <div class="container backgroundImg">
-        <div class="center-block container">
+    <main class="container backgroundImg">
+        <section class="center-block container">
             <h1 id="title">Road<span id="trip">trip</span></h1>
-            <div class="row" id="">
+            <article class="row" id="">
                 <div class="col-sm-5"></div>
                 <div class="col-sm-2">
-                    <a href="#page2" data-toggle="tooltip" title="Map your next road trip."><button class="btn btn-default btnSplash btn-lg" type="button" id="btnSplash1">Plan Your Trip</button></a>                </div>
-            </div>
-        </div>
-    </div>
-    <div id="page2">
+                    <a href="#page2" data-toggle="tooltip" title="Map your next road trip."><button class="btn btn-default btnSplash btn-lg" type="button" id="btnSplash1">Plan Your Trip</button></a>
+                </div>
+            </article>
+        </section>
+    </main>
+    <section id="page2">
         <nav class="navbar navbar-default container-fluid">
             <div class="row">
                 <div class="col-sm-6">
@@ -38,17 +39,15 @@
         </nav>
         <main class="container-fluid">
             <div class="row">
-
-                <div class="col-xs-12 col-sm-12 col-md-8">
+                <section class="col-xs-12 col-sm-12 col-md-8">
                     <div id="map"></div>
-                </div>
-
+                </section>
                 <div class="col-xs-12 col-sm-12 col-md-4">
-                    <div id="sidePanel" class="text-center">
-                        <div class="input-group text-center" id="searchPanel">
+                    <section id="sidePanel" class="text-center">
+                        <article class="input-group text-center" id="searchPanel">
                             <input type="text" class="form-control" placeholder="Starting Point" id="startDestination">
                             <input type="text" class="form-control" placeholder="Destination" id="endDestination">
-                        </div>
+                        </article>
                         <button class="btn btn-default search btnPage2" type="button" data-toggle="tooltip" title="Map your route."><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                         <button class="btn btn-default waypoint btnPage2" type="button" data-toggle="tooltip" title="Add a waypoint"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button>
                         <article>
@@ -57,10 +56,11 @@
                             <div id="fuel"></div>
                             <div id="viewWeather"></div>
                         </article>
-                    </div>
+                    </section>
                 </div>
             </div>
         </main>
+      </section>
         <section class="container-fluid">
             <div id="weather"></div>
         </section>
